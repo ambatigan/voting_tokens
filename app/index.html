@@ -10,38 +10,60 @@
     }
   </style>
 </head>
-<body class="container">
-  <h1>The Voting Ethereum DApp</h1>
-  <div class="col-sm-7 margin-top-3">
-    <h2>Candidates</h2>
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Candidate</th>
-            <th>Votes</th>
-          </tr>
-        </thead>
-        <tbody id="candidate-rows">
-        </tbody>
-      </table>
+<body>
+ 
+<div class="bodydiv">
+	<div class="titlediv">
+	<h2>The Voting Ethereum DApp</h2>
+	</div>
+	<div class="middlediv">
+	<div class="candidateDiv" >
+	<div id="error-msg" style="padding-left: 1em;color: red;"></div>
+    <div class="table-responsive tablediv" style="float:left;padding-left:10px">
+		<!-- <div id = "chart" style="width:100%">
+		</div> -->
+		<div >
+			<input type="text" id="passphrase",  placeholder="Enter user passphrase" />&nbsp;
+			<a href="#" onclick="authenticateUser()" class="btn btn-primary">Authenticate</a>	
+		</div>
+		<br/>
+		<div id="divToken">
+			<span>Token</span>:&nbsp;&nbsp;
+			<span id="userToken"/></span>
+		</div>
+		<div class="table-responsive" id="divVotesDetails">
+			<table class="table table-bordered">
+				<thead>
+				  <tr>
+					<th>Candidate</th>
+					<th>Votes</th>
+				  </tr>
+				</thead>
+				<tbody id="candidate-rows">
+				</tbody>
+			</table>
+		</div>
+	
     </div>
-    <div class="container-fluid">
-      <h2>Vote for Candidate</h2>
+	<div class="tablediv" style="float:right;padding-left:15px" id="divVoting">
+     
       <div id="msg"></div>
-      <input type="text" id="candidate" placeholder="Enter the candidate name"/>
+	  <h5>Vote for Candidate</h5> 
+	  <select  id="candidate">
+	  </select>
+     
       <br>
       <br>
       <input type="text" id="vote-tokens" placeholder="Total no. of tokens to vote"/>
-      <br>
-      <br>
-      <a href="#" onclick="voteForCandidate()" class="btn btn-primary">Vote</a>
+	  <a href="#" onclick="voteForCandidate()" class="btn btn-primary">Vote</a>
+    
     </div>
-  </div>
-  <div class="col-sm-offset-1 col-sm-4 margin-top-3">
-    <div class="row">
-      <h2>Token Stats</h2>
-      <div class="table-responsive">
+    
+	</div>
+	<div class="candidateDiv1" id="divTokensInfo" >
+		<div class="table-responsive tablediv" style="float:left;padding-left:10px">
+		
+		<div class="table-responsive" id="data-table">
         <table class="table table-bordered">
           <tr>
             <td>Tokens For Sale</td>
@@ -60,29 +82,37 @@
             <td id="contract-balance"></td>
           </tr>
         </table>
-      </div>
-    </div>
-    <div class="row margin-top-3">
-      <h2>Purchase Tokens</h2>
-      <div class="col-sm-12">
-        <div id="buy-msg"></div>
-        <input type="text" id="buy" class="col-sm-8" placeholder="Number of tokens to buy"/>&nbsp;
-        <a href="#" onclick="buyTokens()" class="btn btn-primary">Buy</a>
-      </div>
-    </div>
-    <div class="row margin-top-3">
-      <h2>Lookup Voter Info</h2>
-      <div class="col-sm-12">
-        <input type="text" id="voter-info", class="col-sm-8" placeholder="Enter the voter address" />&nbsp;
-        <a href="#" onclick="lookupVoterInfo()" class="btn btn-primary">Lookup</a>
-        <div class="voter-details row text-left">
-          <div id="tokens-bought" class="margin-top-3 col-md-12"></div>
-          <div id="votes-cast" class="col-md-12"></div>
-        </div>
-      </div>
-    </div>
+		</div>
+		</div>
+		<div class="tablediv" style="float:right;padding-left:15px" >
+			
+			<div >
+			<h5>Purchase Tokens</h5> 
+			<input type="text" id="buy" placeholder="Number of tokens to buy"/>&nbsp;
+			<a href="#" onclick="buyTokens()" class="btn btn-primary">Buy</a>
+			<div id="buy-msg"></div>
+			</div>
+			
+			<div >
+				<h5>Lookup Voter Info</h5> 
+				<input type="text" id="voter-info",  placeholder="Enter the voter address" />&nbsp;
+				<a href="#" onclick="lookupVoterInfo()" class="btn btn-primary">Lookup</a>
+				
+			</div>
+			<div class="voter-details row text-left tablediv" style="float:right;padding-left:15px">
+				<div id="tokens-bought" class="margin-top-3 "></div>
+				<div id="votes-cast" class="col-md-12"></div>
+			</div>	
+		</div>
+		
+	</div>
+	
   </div>
+ </div>
 </body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
 <script src="app.js"></script>
+
+
 </html>

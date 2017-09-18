@@ -1,19 +1,81 @@
 body {
-  margin-left: 25%;
+width: 100px;
+ /* margin-left: 25%;
   margin-right: 25%;
-  margin-top: 10%;
+  margin-top: 10%;*/
   font-family: "Open Sans", sans-serif;
+  overflow: hidden;
+	margin: 0;
+	font-size: 12px;
+	background-color: #ccc6c6;
 }
-
+.titlediv{ 
+    background-color: #025BC3;
+    margin: 5px;
+    border-radius: 5px;
+    padding-top: 5px;
+} 
+.bodydiv{
+border: 1px solid #025BC3;
+    margin-left: 12px;
+    margin-top: 10px;
+    border-radius: 5px;
+    background-color: #1767C3;
+    height: 105vh;
+    width: 100vw;
+    margin: 1px;
+}
+.middlediv{
+	border: 2px solid #e6e6e8;
+    border-radius: 5px;
+    height: 84% !important;
+    margin: 5px;
+   
+    background-color: #E6E6E8;
+}
+.candidateDiv{
+	width:79%;
+	border: 1px solid #b1aaaa;
+    border-radius: 5px;
+    margin: 5px;
+    height: 43%;
+	float:left;
+	margin-left:8%;
+	padding-top:10px
+}
+.candidateDiv1{
+	width:79%;
+	border: 1px solid #b1aaaa;
+    border-radius: 5px;
+    margin: 5px;
+    height: 50%;
+	float:left;
+	margin-left:8%;
+	padding-top:10px
+}
+select {
+width:200px;
+height:30px;
+}
+.tablediv{
+width:50%;	
+}
+table tr td{
+width:50%;
+border-color: 1px solid #000;
+}
+table tbody tr td{
+border-color: #000;
+}
 label {
   display: inline-block;
   width: 100px;
 }
 
 input {
-  width: 500px;
+ /* width: 400px;*/
   padding: 5px;
-  font-size: 16px;
+  font-size: 13px;
 }
 
 button {
@@ -50,3 +112,49 @@ h3 {
 .hint {
   color: #666;
 }
+
+/* Login */
+/*
+.bodycol{
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    background-color: #262626;
+}
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+.main{
+	width: 530px;
+    margin: 13% auto 0 auto;
+}
+.wrapper {
+    margin: 5px;
+    padding: 0px 0px 0px 100px;
+    height: 258px;
+    
+}
+.left {
+    float: left;
+    background: url(../images/login/left-side.png);
+    width: 31px;
+    height: 261px;
+}
+.middle {
+    float: left;
+    background-image: url(../images/login/middle.png);
+    height: 261px;
+    width: 300px;
+}
+.right {
+    float: left;
+    background: url(../images/login/rigt-side.png);
+    width: 31px;
+    height: 261px;
+}
+*/

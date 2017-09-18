@@ -1,0 +1,24 @@
+{
+	"users" : [
+		{
+			"id"			:	"0",
+			"passphrase"	:	"ganga",
+			"token"			:	"0xbfb8c05ee8cfa6df2bbe8590d2fcb1083ec4c4c2"
+		},
+		{
+			"id"			:	"1",
+			"passphrase"	:	"ganga1",
+			"token"			:	"0xc917792b1299f0ba23b3bb230f6b139eb5ab847e"
+		},
+		{
+			"id"			:	"2",
+			"passphrase"	:	"ganga2",
+			"token"			:	"0x5cf07a49a232f7257fc6e4dc351a6694427eae7f"
+		},
+		{
+			"id"			:	"3",
+			"passphrase"	:	"ganga3",
+			"token"			:	"0x924e53fcc25e11a4d5c3b51b7d8350d97fe65ab4"
+		}
+	]
+}
