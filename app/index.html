@@ -1,118 +1,207 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>The Voting DApp</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
-  <style>
-    .margin-top-3 {
-      margin-top: 3em;
-    }
-  </style>
-</head>
-<body>
- 
-<div class="bodydiv">
-	<div class="titlediv">
-	<h2>The Voting Ethereum DApp</h2>
-	</div>
-	<div class="middlediv">
-	<div class="candidateDiv" >
-	<div id="error-msg" style="padding-left: 1em;color: red;"></div>
-    <div class="table-responsive tablediv" style="float:left;padding-left:10px">
-		<!-- <div id = "chart" style="width:100%">
-		</div> -->
-		<div >
-			<input type="text" id="passphrase",  placeholder="Enter user passphrase" />&nbsp;
-			<a href="#" onclick="authenticateUser()" class="btn btn-primary">Authenticate</a>	
-		</div>
-		<br/>
-		<div id="divToken">
-			<span>Token</span>:&nbsp;&nbsp;
-			<span id="userToken"/></span>
-		</div>
-		<div class="table-responsive" id="divVotesDetails">
-			<table class="table table-bordered">
-				<thead>
-				  <tr>
-					<th>Candidate</th>
-					<th>Votes</th>
-				  </tr>
-				</thead>
-				<tbody id="candidate-rows">
-				</tbody>
-			</table>
-		</div>
-	
-    </div>
-	<div class="tablediv" style="float:right;padding-left:15px" id="divVoting">
-     
-      <div id="msg"></div>
-	  <h5>Vote for Candidate</h5> 
-	  <select  id="candidate">
-	  </select>
-     
-      <br>
-      <br>
-      <input type="text" id="vote-tokens" placeholder="Total no. of tokens to vote"/>
-	  <a href="#" onclick="voteForCandidate()" class="btn btn-primary">Vote</a>
-    
-    </div>
-    
-	</div>
-	<div class="candidateDiv1" id="divTokensInfo" >
-		<div class="table-responsive tablediv" style="float:left;padding-left:10px">
-		
-		<div class="table-responsive" id="data-table">
-        <table class="table table-bordered">
-          <tr>
-            <td>Tokens For Sale</td>
-            <td id="tokens-total"></td>
-          </tr>
-          <tr>
-            <td>Tokens Sold</td>
-            <td id="tokens-sold"></td>
-          </tr>
-          <tr>
-            <td>Price Per Token</td>
-            <td id="token-cost"></td>
-          </tr>
-          <tr>
-            <td>Balance in the contract</td>
-            <td id="contract-balance"></td>
-          </tr>
-        </table>
-		</div>
-		</div>
-		<div class="tablediv" style="float:right;padding-left:15px" >
-			
-			<div >
-			<h5>Purchase Tokens</h5> 
-			<input type="text" id="buy" placeholder="Number of tokens to buy"/>&nbsp;
-			<a href="#" onclick="buyTokens()" class="btn btn-primary">Buy</a>
-			<div id="buy-msg"></div>
-			</div>
-			
-			<div >
-				<h5>Lookup Voter Info</h5> 
-				<input type="text" id="voter-info",  placeholder="Enter the voter address" />&nbsp;
-				<a href="#" onclick="lookupVoterInfo()" class="btn btn-primary">Lookup</a>
-				
-			</div>
-			<div class="voter-details row text-left tablediv" style="float:right;padding-left:15px">
-				<div id="tokens-bought" class="margin-top-3 "></div>
-				<div id="votes-cast" class="col-md-12"></div>
-			</div>	
-		</div>
-		
-	</div>
-	
-  </div>
- </div>
-</body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
-<script src="app.js"></script>
+<html lang="en">
 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="e-Voting for AGM">
+    <meta name="keywords" content="e-Voting for AGM" />
+    <meta name="author" content="">
+    <title>e-Voting for AGM</title>
+	
+    <link href="app/vendor/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="app/stylesheets/font-awesome.min.css" rel="stylesheet">
+    <link href="app/stylesheets/animate.css" rel="stylesheet">
+    <link href="app/stylesheets/responsive.css" rel="stylesheet">
+    <link href="app/stylesheets/app.css" rel="stylesheet">  
+	
+    <script src="app/vendor/jquery-3.2.1.min.js"></script>
+    <script src="app/vendor/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<script src="app.js"></script>
+	<script src="../node_modules/web3/dist/web3.js"></script>
+	 
+</head>
+
+<body>
+   <!-- <div class="preloader">
+        <div class="loader"></div>
+    </div> -->
+
+    <div class="full-container">
+        <div class="top-cont">
+            <div class="brand-info">
+                <img src="app/images/logo.svg">  
+                <h3>e-Voting for AGM</h3>
+                <p>Investor Voting Screen</p>
+                <div class="user-info">
+                    <p>Welcome! <span id="userName"></span></p>
+                </div>
+            </div>
+            <div class="auth-base">
+                <div class="auth-cont">
+                    <input type="text" id="passphrase" placeholder="Enter user passphrase" />
+                    <button onclick="authenticateUser()" class="btn">Authenticate</button>
+                </div>
+                <div class="hr"></div>
+                <div id="info_cont">
+                    <p>Please cast your Vote here. Votes will be considered only if you enter the no. of votes depending on
+                        your shares count and hit submit for each resolution. The total number of securities/tokens mentioned
+                        is as on the record date decided by the company. You can vote for any one of the resolutions and
+                        the remaining resolutions, anytime before the end of the voting period. Please check your votes before
+                        you click on Vote. Once you click on Vote, your vote for all the resolutions you have selected will
+                        be recorded and cannot be changed.</p>
+                </div>
+            </div>
+        </div>
+        <div class="app-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Share Holder Info</strong>
+                        </div>
+                        <div class="card-block">
+                            <div class="divTable addr-table">
+                                <div class="divTableBody">
+                                    <div class="divTableRow conpnay-info">
+                                        <div class="divTableCell">Company</div>
+                                        <div class="divTableCell" style="display:flex">
+                                            <img src="app/images/saven.png" style="height:35px"> 
+                                            <p id="companyName">Saven Technologies Limited</p>
+                                        </div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">EVSN</div>
+                                        <div id="evsn" class="divTableCell"></div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">Voting Period</div>
+                                        <div id="votingPeriod" class="divTableCell">
+                                            From 21-Sept-2017 09:00 Hours
+                                            <br>To 30-Sept-2017 07:00 Hours
+                                        </div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">User ID</div>
+                                        <div id="userId" class="divTableCell"></div>
+                                    </div>
+									<div class="divTableRow">
+                                        <div class="divTableCell">User Address</div>
+                                        <div id="userToken" class="divTableCell"></div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">Total No.of Securities hold in your demat account/folio</div>
+                                        <div id="securitiesSize" class="divTableCell"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card voting-status">
+                        <div class="card-header">
+                            <strong>Voting Status</strong>
+                        </div>
+                        <div class="card-block">
+                            <div class="divTable addr-table">
+                                <div class="divTableHeading">
+                                    <div class="divTableHead">Resolution</div>
+                                    <div class="divTableHead">Votes Polled</div>
+                                </div>
+                                <div class="divTableBody" id="candidate-rows">
+                                    <div class="divTableRow">
+                                        <div class="divTableCell" id="resolution1"></div>
+                                        <div id="res1-data" class="divTableCell"></div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell" id="resolution2"></div>
+                                        <div id="res2-data" class="divTableCell"></div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell"  id="resolution3"></div>
+                                        <div id="res3-data" class="divTableCell"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+						<div class="card-header">
+                            <strong>Vote for Resolution</strong>
+                        </div>
+                        <div class="card-block">
+                            <div class="form-group">
+                               <!-- <label for="candidate">Vote for Resolution</label> -->
+							   
+                                <div class="input-group">
+                                    <select class="form-control" id="candidate">
+                                    </select>
+                                    <input class="form-control" id="vote-tokens" placeholder="Total no. of tokens to vote" type="text">
+                                    <button class="btn" onclick="voteForCandidate()">Vote</button>
+                                </div>
+                                <span class="help-block" id="msg-vote-count"><i class="fa fa-info-circle"></i><span class="msg">Vote has been submitted. The vote count will increment as soon as the vote is recorded on the blockchain. Please wait.</span></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="candidate">Purchase Tokens</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="buy" placeholder="Number of tokens to buy" type="text">
+                                    <button class="btn" onclick="buyTokens()">Buy</button>
+                                </div>
+                                <span class="help-block" id="msg-buy-count"><i class="fa fa-info-circle"></i><span>Purchase order has been submitted. Please wait.</span></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="candidate">Lookup Voter info</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="voter-info" placeholder="Enter share holder address" type="text">
+                                    <button class="btn" onclick="lookupVoterInfo()">Lookup</button>
+                                </div>
+                                <span class="help-block" id="msg-loading-voter"><i class="fa fa-info-circle"></i><span>Loading voter info. Please wait.</span></span>
+								<div id="tokens-bought"></div>
+								<div id="votes-cast"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card token-status">
+                        <div class="card-header">
+                            <strong>Token Status</strong>
+                        </div>
+                        <div class="card-block">
+                            <div class="divTable addr-table">
+                                <div class="divTableBody">
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">Tokens For Sale</div>
+                                        <div id="tokens-total" class="divTableCell"></div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">Tokens Sold</div>
+                                        <div id="tokens-sold" class="divTableCell"></div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">Price Per Token</div>
+                                        <div id="token-cost" class="divTableCell"></div>
+                                    </div>
+                                    <div class="divTableRow">
+                                        <div class="divTableCell">Balance in the contract</div>
+                                        <div id="contract-balance" class="divTableCell"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="app-footer">
+            <a href="#">e-Voting for AGM</a> © 2017.
+            <span class="pull-right">Powered by <a href="http://saven.in">Saven Technologies</a></span>
+        </footer>
+    </div>
+    
+
+     
+</body>
 
 </html>

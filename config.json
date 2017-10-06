@@ -1,0 +1,40 @@
+{
+        "company" : "Saven Technologies Limited",
+        "Resolution1" : "Confirm the dividend of Rs.2.00 per equity share",
+        "Resolution2" : "Approve transactions with related party",
+        "Resolution3" : "Re-appoint Mr.Sampath as Director",
+        "users" : [
+                {
+                        "id"                    :       "0",
+                        "passphrase"    :       "saven123",
+                        "token"                 :       "0x9624ce467a76d891e2c18f7c560035df2299447d",
+                        "evsn"                  :       "16072001",
+                        "userId"                :       "IN30286310047555",
+                        "userName"              :       "Ram Mohan"
+                },
+                {
+                        "id"                    :       "1",
+                        "passphrase"    :       "saven1231",
+                        "token"                 :       "0xbd93da2e696bf38085ea146ad0f87e4320da6587",
+                        "evsn"                  :       "16072002",
+                        "userId"                :       "IN30286310047556",
+                        "userName"              :       "Phani Bhushan"
+                },
+                {
+                        "id"                    :       "2",
+                        "passphrase"    :       "saven1232",
+                        "token"                 :       "0x8e6ed14999044c97236b06c9a476048bf569f028",
+                        "evsn"                  :       "16072003",
+                        "userId"                :       "IN30286310047557",
+                        "userName"              :       "Vithal Kumar"
+                },
+                {
+                        "id"                    :       "3",
+                        "passphrase"    :       "saven1233",
+                        "token"                 :       "0x0fcd5a5ab45260138c50fe9b8bdd18cf2bb98855",
+                        "evsn"                  :       "16072004",
+                        "userId"                :       "IN30286310047558",
+                        "userName"              :       "Madhavi Latha"
+                }
+        ]
+}

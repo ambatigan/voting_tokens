@@ -1,9 +1,6 @@
-// Import the page's CSS. Webpack will know what to do with it.
-import "../stylesheets/app.css";
-
 // Import libraries we need.
 import { default as Web3} from 'web3';
-import { default as contract } from 'truffle-contract'
+import { default as contract } from 'truffle-contract';
 
 /*
  * When you compile and deploy your Voting contract,
@@ -13,9 +10,30 @@ import { default as contract } from 'truffle-contract'
  * later to create an instance of the Voting contract.
  */
 
-import voting_artifacts from '../../build/contracts/Voting.json'
+import voting_artifacts from '../../build/contracts/Voting.json';
+ 
+// Import the page's CSS. Webpack will know what to do with it.
+import "../vendor/jquery-3.2.1.min.js";
+import "../vendor/bootstrap-3.3.7-dist/js/bootstrap.min.js";
+import "../vendor/bootstrap-3.3.7-dist/css/bootstrap.min.css";
+import "../stylesheets/app.css";
+import "../stylesheets/font-awesome.min.css";
+import "../stylesheets/animate.css";
+import "../stylesheets/responsive.css";
 
-var users = require('../../users.json');
+
+
+
+
+//require("font-awesome-webpack");
+//require("bootstrap");
+
+global.jQuery = require('../vendor/jquery-3.2.1.min');
+//import $ from 'vendor/jquery';
+//window.jQuery = require('jquery');
+
+
+var config = require('../../config.json');
 var redrawit;
 var Voting = contract(voting_artifacts);
 
@@ -25,12 +43,20 @@ let tokenPrice = null;
 let userId = null;
 let userPassphrase=null;
 let userToken = null;
+let userName = null;
+let companyName = null;
+let userInfo = null;
+let evsn = null;
+let securitiesSize = null;
+
 
 window.voteForCandidate = function(candidate) {
   let candidateName = $("#candidate").val();
   let voteTokens = $("#vote-tokens").val();
-  $("#msg").html("Vote has been submitted. The vote count will increment as soon as the vote is recorded on the blockchain. Please wait.")
-  $("#candidate").val("");
+  //$("#msg").html("Vote has been submitted. The vote count will increment as soon as the vote is recorded on the blockchain. Please wait.")
+  document.getElementById('msg-vote-count').style.display = 'block';
+  document.getElementById('msg-vote-count').style.visibility = 'visible';
+  //$("#candidate").val("");
   $("#vote-tokens").val("");
 
   /* Voting.deployed() returns an instance of the contract. Every call
@@ -56,7 +82,8 @@ window.voteForCandidate = function(candidate) {
 window.buyTokens = function() {
   let tokensToBuy = $("#buy").val();
   let price = tokensToBuy * tokenPrice;
-  $("#buy-msg").html("Purchase order has been submitted. Please wait.");
+  document.getElementById('msg-buy-count').style.display = 'block';
+  document.getElementById('msg-buy-count').style.visibility = 'visible';
   Voting.deployed().then(function(contractInstance) {
     contractInstance.buy({value: web3.toWei(price, 'ether'), from: userToken}).then(function(v) {
       $("#buy-msg").html("");
@@ -70,6 +97,8 @@ window.buyTokens = function() {
 
 window.lookupVoterInfo = function() {
   let address = $("#voter-info").val();
+  document.getElementById('msg-loading-voter').style.display = 'block';
+  document.getElementById('msg-loading-voter').style.visibility = 'visible';
   console.log("voter address : "+address);
   Voting.deployed().then(function(contractInstance) {
     contractInstance.voterDetails.call(address).then(function(v) {
@@ -79,39 +108,67 @@ window.lookupVoterInfo = function() {
       $("#votes-cast").append("Votes cast per candidate: <br>");
       let allCandidates = Object.keys(candidates);
       for(let i=0; i < allCandidates.length; i++) {
-        $("#votes-cast").append(allCandidates[i] + ": " + votesPerCandidate[i] + "<br>");
+		  if(allCandidates[i] == "Resolution-1")
+			$("#votes-cast").append(config.Resolution1 + ": " + votesPerCandidate[i] + "<br>");
+		if(allCandidates[i] == "Resolution-2")
+			$("#votes-cast").append(config.Resolution2 + ": " + votesPerCandidate[i] + "<br>");
+		if(allCandidates[i] == "Resolution-3")
+			$("#votes-cast").append(config.Resolution3 + ": " + votesPerCandidate[i] + "<br>");
       }
     });
   });
+  document.getElementById('msg-loading-voter').style.display = 'none';
+  document.getElementById('msg-loading-voter').style.visibility = 'none';
 }
 
 window.authenticateUser = function() {
-	userPassphrase = $("#passphrase").val();
-	$("#error-msg").html("");
-	 $("#userToken").html("");
-	 disableAll();
-	var bool="Login failed";
-	var loginData = users.users;
-	for(var i=0 ; i<loginData.length ; i++) {
-		if(loginData[i].passphrase == userPassphrase) {
-			bool="Success";
-			userId = loginData[i].id;
-			userToken = loginData[i].token;	
+
+	if($('#passphrase').val() === "") {
+        alert('please enter passphrase');
+    } else {
+	document.getElementById('msg-vote-count').style.display = 'none';
+    document.getElementById('msg-vote-count').style.visibility = 'none';
+	document.getElementById('msg-buy-count').style.display = 'none';
+    document.getElementById('msg-buy-count').style.visibility = 'none';
+	$("#buy").val("");
+	$("#buy").text("")
+	$("#buy").attr("placeholder","Number of tokens to buy")
+	$("#votes-cast").empty();
+	$("#tokens-bought").empty();
+	$('#vote-tokens').text('');
+	$('#vote-tokens').val("");
+	$('#voter-info').text('');
+	$('#voter-info').val("");
+	
+	
+		userPassphrase = $("#passphrase").val();
+		$("#error-msg").html("");
+		$("#userToken").html("");
+		var bool="Login failed";
+		var loginData = config.users;
+		for(var i=0 ; i<loginData.length ; i++) {
+			if(loginData[i].passphrase == userPassphrase) {
+				bool="Success";
+				userId = loginData[i].id;
+				userToken = loginData[i].token;	
+				userInfo = loginData[i].userId+' : '+loginData[i].userName;
+				userName = loginData[i].userName;
+				evsn = loginData[i].evsn;
+			}
 		}
-	}
-	if(bool == "Success") {
-		unlockAccountsIfNeeded(userToken,userPassphrase);
-		//unlockAccount(userToken, userPassphrase);
-		if (isAccountLocked(userToken))
-           disableAll();
-		else {
-			enableAll();
-			 $("#userToken").html(userToken);
+		if(bool == "Success") {
+			unlockAccountsIfNeeded(userToken,userPassphrase);
+			if(!$('.full-container').hasClass('auth-success')) {
+				$('.full-container').addClass('auth-success');
+			}
+		} else {
+			if($('.full-container').hasClass('auth-success')) {
+				$('.full-container').removeClass('auth-success');
+			}
+			alert("Please enter valid passphrase..!");
 		}
-	} else {
-		alert("Please enter valid passphrase..!");
-		disableAll();
-	}
+		populateUserData();
+    }
 }
 
 /* Instead of hardcoding the candidates hash, we now fetch the candidate list from
@@ -140,15 +197,25 @@ function populateCandidateVotes() {
     let name = candidateNames[i];
     Voting.deployed().then(function(contractInstance) {
       contractInstance.totalVotesFor.call(name).then(function(v) {
-        $("#" + candidates[name]).html(v.toString());
+		if(name == "Resolution-1")
+			$("#res1-data").html(v.toString());
+		if(name == "Resolution-2")
+			$("#res2-data").html(v.toString());
+		if(name == "Resolution-3") 
+			$("#res3-data").html(v.toString());
       });
     });
   }
 }
 
 function setupCandidateRows() {
-  Object.keys(candidates).forEach(function (candidate) { 
-    $("#candidate-rows").append("<tr><td>" + candidate + "</td><td id='" + candidates[candidate] + "'></td></tr>");
+  Object.keys(candidates).forEach(function (candidate) {
+	if(candidate == "Resolution-1")
+		$("#resolution1").append(config.Resolution1);
+	if(candidate == "Resolution-2")
+		$("#resolution2").append(config.Resolution2);
+	if(candidate == "Resolution-3")
+		$("#resolution3").append(config.Resolution3);
   });
 }
 
@@ -171,6 +238,19 @@ function populateTokenData() {
       $("#contract-balance").html(web3.fromWei(result.toString()) + " Ether");
     });
   });
+}
+
+function populateUserData() {
+	$("#userName").html(userName);
+	$("#userToken").html(userToken);
+	$("#companyName").html(config.company);
+	$("#evsn").html(evsn);
+	$("#userId").html(userInfo);
+	Voting.deployed().then(function(contractInstance) {
+		contractInstance.voterDetails.call(userToken).then(function(v) {
+			$("#securitiesSize").html(v[0].toString());
+		});
+	})
 }
 
 function isAccountLocked(account) {
@@ -220,70 +300,36 @@ function unlockAccount(userToken, userPassphrase) {
 	}
 }
 
-function drawChart(){
-
-	var w = ($('#chart').parent().parent().width())/3  //400;
-	var h = $('#chart').parent().parent().height()-10; //400;
-	
-	
-	var r = h/2;
-	var color = d3.scale.category20c();
-
-	var data = [{"label":"Murthy", "value":20}, 
-					  {"label":"Sridhar", "value":50}, 
-					  {"label":"Ganga", "value":30}];
-
-
-var vis = d3.select('#chart').append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
-var pie = d3.layout.pie().value(function(d){return d.value;});
-
-// declare an arc generator function
-var arc = d3.svg.arc().outerRadius(r);
-
-// select paths, use arc generator to draw
-var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
-arcs.append("svg:path")
-    .attr("fill", function(d, i){
-        return color(i);
-    })
-    .attr("d", function (d) {
-        // log the result of the arc generator to show how cool it is :)
-        console.log(arc(d));
-        return arc(d);
-    });
-
-// add the text
-arcs.append("svg:text").attr("transform", function(d){
-			d.innerRadius = 0;
-			d.outerRadius = r;
-    return "translate(" + arc.centroid(d) + ")";}).attr("text-anchor", "middle").text( function(d, i) {
-    return data[i].label;})
-}
-
 function renderSelectBox(){
-	var namesLst = ["Vote for..","Murthy", "Sridhar","Ganga"]
+	var items={option1:{value:"Resolution-1",text:"Confirm the dividend of Rs.2.00 per equity share"},
+			option2:{value:"Resolution-2",text:"Approve transactions with related party"},
+			option3:{value:'Resolution-3',text:"Re-appoint Mr.Sampath as Director"}};
+	$.each(items, function (i, item) {
+		$('#candidate').append($('<option>', { 
+			value: item.value,
+			text : item.text 
+		}));
+	});
+	/*var namesLst = ["Murthy", "Sridhar","Ganga"]
 	$.each(namesLst, function(idx, item) {
 			$("<option/>").text(item).val(item).appendTo('#candidate');
-	})
+	})*/
 }
 
 function disableAll() {
-	document.getElementById('divTokensInfo').style.display = 'none';
-    document.getElementById('divTokensInfo').style.visibility = 'none';
+	document.getElementById('msg-vote-count').style.display = 'none';
+    document.getElementById('msg-vote-count').style.visibility = 'none';
 	
-	document.getElementById('divVoting').style.display = 'none';
-    document.getElementById('divVoting').style.visibility = 'none';
+	document.getElementById('msg-buy-count').style.display = 'none';
+    document.getElementById('msg-buy-count').style.visibility = 'none';
 	
-	document.getElementById('divToken').style.display = 'none';
-    document.getElementById('divToken').style.visibility = 'none';
-	
-	document.getElementById('divVotesDetails').style.display = 'none';
-    document.getElementById('divVotesDetails').style.visibility = 'none';
+	document.getElementById('msg-loading-voter').style.display = 'none';
+    document.getElementById('msg-loading-voter').style.visibility = 'none';
 }
 
 function enableAll() {
-	document.getElementById('divTokensInfo').style.display = 'block';
-    document.getElementById('divTokensInfo').style.visibility = 'visible';
+	document.getElementById('userInfo').style.display = 'block';
+    document.getElementById('userInfo').style.visibility = 'visible';
 	
 	document.getElementById('divVoting').style.display = 'block';
     document.getElementById('divVoting').style.visibility = 'visible';
@@ -293,18 +339,19 @@ function enableAll() {
 	
 	document.getElementById('divVotesDetails').style.display = 'block';
     document.getElementById('divVotesDetails').style.visibility = 'visible';
+	
+	document.getElementById('userText').style.display = 'block';
+    document.getElementById('userText').style.visibility = 'visible';
 }
 
-window.onresize = function() {
-	$('#chart').find('svg').remove();
-	clearTimeout(redrawit);
-	setTimeout(function() {
-	drawChart();
-	},10)
+function clearItems(){
+	 $("#msg").html("");
+	$('#vote-tokens').text('')
 }
 
 $( document ).ready(function() {
 	disableAll();
+	console.log("in document ready function.....");
   if (typeof web3 !== 'undefined') {
     console.warn("Using web3 detected from external source like Metamask")
     // Use Mist/MetaMask's provider
@@ -318,5 +365,11 @@ $( document ).ready(function() {
   Voting.setProvider(web3.currentProvider);
   populateCandidates();
   renderSelectBox();
-  drawChart();
+  $('#passphrase').keypress(function (event) {
+        if(event.which == 13) {
+			authenticateUser()
+        } else
+            return;
+    });
+  
 });
