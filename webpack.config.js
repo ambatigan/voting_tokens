@@ -11,6 +11,14 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     filename: 'app.js'
   },
+  devServer: {
+
+    compress: true,
+
+    disableHostCheck: true,   // That solved it
+
+ },
+
   	  /* resolve: {
   modules: [
     path.join(__dirname, "./app/vendor"),
